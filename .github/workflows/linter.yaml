@@ -1,0 +1,32 @@
+name: Code Style Validation
+
+on:
+  push:
+    branches: [main, stage]
+    paths-ignore:
+      - "README.md"
+  pull_request:
+    branches: [main, stage, develop]
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - "README.md"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone FoodManager-DevOps repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Lint Code Base
+        uses: github/super-linter/slim@v4
+        env:
+          VALIDATE_ANSIBLE: true
+          VALIDATE_BASH: true
+          VALIDATE_BASH_EXEC: true
+          VALIDATE_TERRAFORM_FMT: true
+          VALIDATE_TERRAGRUNT:  true
+          DEFAULT_BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
